@@ -1,6 +1,6 @@
 package com.rb.fmea.dto;
 
-import com.rb.fmea.entities.FmeaFunction;
+
 import lombok.*;
 
 import java.util.List;

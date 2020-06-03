@@ -56,7 +56,7 @@ public interface FmeaFailAnalysisRelateMapper {
      * @Param [parentFailAnalysisId, nextFailAnalysisId]
      * @return com.rb.fmea.entities.FmeaFailAnalysisRelate
      **/
-    FmeaFailAnalysisRelate selectByfailAnalysisSuperiorIdAndFailAnalysisNextId(@Param("parentFailAnalysisId") int parentFailAnalysisId,@Param("nextFailAnalysisId") int nextFailAnalysisId);
+    FmeaFailAnalysisRelate selectByfailAnalysisSuperiorIdAndFailAnalysisNextId(@Param("parentFailAnalysisId") int parentFailAnalysisId, @Param("nextFailAnalysisId") int nextFailAnalysisId);
 
     /**
      * @Author yyk

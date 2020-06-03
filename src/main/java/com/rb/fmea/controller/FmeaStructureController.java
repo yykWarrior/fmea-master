@@ -24,7 +24,6 @@ public class FmeaStructureController {
     @Autowired
     private FmeaStructureService fmeaStructureService;
 
-
     /**
      * @Author yyk
      * @Description //TODO 插入客户和总成
