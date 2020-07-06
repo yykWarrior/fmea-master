@@ -10,7 +10,7 @@
     <result column="analysis_standard" property="analysisStandard" jdbcType="INTEGER" />
     <result column="fmea_fail_analysis_desc" property="fmeaFailAnalysisDesc" jdbcType="VARCHAR" />
     <result column="function_id" property="functionId" jdbcType="INTEGER" />
-    <result column="severity" property="severity" jdbcType="VARCHAR" />
+    <result column="severity" property="severity" jdbcType="INTEGER" />
   </resultMap>
 
 
@@ -39,7 +39,7 @@
     insert into fmea_fail_analysis (analysis_standard, fmea_fail_analysis_desc,
       function_id, severity)
     values (#{analysisStandard,jdbcType=INTEGER}, #{fmeaFailAnalysisDesc,jdbcType=VARCHAR},
-      #{functionId,jdbcType=INTEGER}, #{severity,jdbcType=VARCHAR})
+      #{functionId,jdbcType=INTEGER}, #{severity,jdbcType=INTEGER})
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.rb.fmea.entities.FmeaFailAnalysis" >
     <!--
@@ -50,7 +50,7 @@
     set analysis_standard = #{analysisStandard,jdbcType=INTEGER},
       fmea_fail_analysis_desc = #{fmeaFailAnalysisDesc,jdbcType=VARCHAR},
       function_id = #{functionId,jdbcType=INTEGER},
-      severity = #{severity,jdbcType=VARCHAR}
+      severity = #{severity,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -89,5 +89,34 @@
     <select id="selectNextFunction" resultMap="BaseResultMap" >
         select id, analysis_standard, fmea_fail_analysis_desc, function_id, severity
         from fmea_fail_analysis where function_id in (select function_next_id from fmea_function_relate where function_superior_id=(select function_id from fmea_fail_analysis where id=#{fmeaFailAnalysisId}) )
+    </select>
+
+
+    <!--查询总成的严重度-->
+    <select id="selectAssemblySeverityByFailAnalysisId" resultMap="BaseResultMap" >
+        select id, analysis_standard, fmea_fail_analysis_desc, function_id, severity
+        from fmea_fail_analysis where id in(select fail_analysis_superior_id from fmea_fail_analysis_relate where fail_analysis__next_id in(select fail_analysis_superior_id from fmea_fail_analysis_relate where fail_analysis__next_id=#{failAnalysisId} ))
+    </select>
+
+
+    <!--查询客户的严重度-->
+    <select id="selectCustomerSeverityByFailAnalysisId" resultMap="BaseResultMap" >
+         select id, analysis_standard, fmea_fail_analysis_desc, function_id, severity
+        from fmea_fail_analysis
+        where id in(select fail_analysis_superior_id from fmea_fail_analysis_relate
+        where fail_analysis__next_id in(select fail_analysis_superior_id from fmea_fail_analysis_relate
+        where fail_analysis__next_id in(select fail_analysis_superior_id from fmea_fail_analysis_relate
+        where fail_analysis__next_id=#{failAnalysisId} )))
+    </select>
+
+
+    <!--查询一个fmea下的所有失效分析-->
+    <select id="selectFailAnalysisByFmeaId" resultMap="BaseResultMap">
+        select * from fmea_fail_analysis where function_id in(
+       select id from fmea_function where fmea_structure_id in(
+       select id from fmea_structure where superior_id
+       in(select id from fmea_structure where superior_id
+       in (select id from fmea_structure where superior_id
+       in(select id from fmea_structure where fmea_id=#{fmeaId} and superior_id=0)))))
     </select>
 </mapper>

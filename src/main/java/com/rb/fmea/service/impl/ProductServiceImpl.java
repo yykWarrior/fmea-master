@@ -57,8 +57,10 @@ public class ProductServiceImpl implements ProductService {
      * @return com.rb.fmea.result.Result
      **/
     @Override
-    public Result updateProduct(Product product) {
+    public Result updateProduct(MultipartFile multipartFile, Product product) {
         try {
+            String newName = UploadFile.oneUploadFile(multipartFile, PATH);
+            product.setProductPath(PATH+"/"+newName);
             productMapper.updateByPrimaryKey(product);
             return Result.success();
         } catch (Exception e) {
@@ -106,6 +108,23 @@ public class ProductServiceImpl implements ProductService {
             productMapper.insert(product);
             return Result.success();
         } catch (IOException e) {
+            return Result.error(new CodeMsg(ReturnCode.DATA_IS_WRONG,e.getMessage()));
+        }
+    }
+
+    /**
+     * @Author yyk
+     * @Description //TODO 修改产品信息无文件
+     * @Date 2020/6/17 14:53
+     * @Param [product]
+     * @return com.rb.fmea.result.Result
+     **/
+    @Override
+    public Result updateProductNoFile(Product product) {
+        try {
+            productMapper.updateByPrimaryKey(product);
+            return Result.success();
+        } catch (Exception e) {
             return Result.error(new CodeMsg(ReturnCode.DATA_IS_WRONG,e.getMessage()));
         }
     }

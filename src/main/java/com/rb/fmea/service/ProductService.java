@@ -6,8 +6,6 @@ import com.rb.fmea.result.Result;
 import com.rb.fmea.result.ResultDto;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-
 /**
  * @version v1.0
  * @ClassName: ProductService
@@ -27,12 +25,12 @@ public interface ProductService {
 
     /**
      * @Author yyk
-     * @Description //TODO 更新产品信息
+     * @Description //TODO 更新产品信息有文件
      * @Date 2020/5/20 15:47
      * @Param [product]
      * @return com.rb.fmea.result.Result
      **/
-    Result updateProduct(Product product);
+    Result updateProduct(MultipartFile multipartFile, Product product);
 
     /**
      * @Author yyk
@@ -51,4 +49,13 @@ public interface ProductService {
      * @return com.rb.fmea.result.Result
      **/
     Result insertProduct(MultipartFile multipartFile, Product product);
+
+    /**
+     * @Author yyk
+     * @Description //TODO 修改产品信息无文件
+     * @Date 2020/6/17 14:53
+     * @Param [product]
+     * @return com.rb.fmea.result.Result
+     **/
+    Result updateProductNoFile(Product product);
 }

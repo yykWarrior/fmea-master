@@ -3,6 +3,8 @@ package com.rb.fmea.service;
 import com.rb.fmea.entities.FmeaFailAnalysis;
 import com.rb.fmea.result.Result;
 
+import java.util.List;
+
 /**
  * @version v1.0
  * @ClassName: FmeaFailAnalysisService
@@ -18,7 +20,7 @@ public interface FmeaFailAnalysisService {
      * @Param [ids]
      * @return com.rb.fmea.result.Result
      **/
-    Result delete(String ids);
+    Result delete(String ids, int fmeaId);
 
     /**
      * @Author yyk
@@ -27,7 +29,7 @@ public interface FmeaFailAnalysisService {
      * @Param [fmeaFailAnalysis]
      * @return com.rb.fmea.result.Result
      **/
-    Result update(FmeaFailAnalysis fmeaFailAnalysis);
+    Result update(FmeaFailAnalysis fmeaFailAnalysis, int fmeaId);
 
     /**
      * @Author yyk
@@ -45,7 +47,7 @@ public interface FmeaFailAnalysisService {
      * @Param [functionId, fmeaFailAnalysis]
      * @return com.rb.fmea.result.Result
      **/
-    Result insert(int functionId, String fmeaFailAnalysis);
+    Result insert(String fmeaFailAnalysis);
 
     /**
      * @Author yyk
@@ -73,4 +75,14 @@ public interface FmeaFailAnalysisService {
      * @return com.rb.fmea.result.Result
      **/
     Result selectNextFunction(int fmeaFailAnalysisId);
+
+
+    /**
+     * @Author yyk
+     * @Description //TODO 根据失效分析id查询严重度
+     * @Date 2020/6/5 14:25
+     * @Param [failAnalysisId]
+     * @return java.util.List<com.rb.fmea.entities.FmeaFailAnalysis>
+     **/
+    List<FmeaFailAnalysis> selectSeverityByFailAnalysisId(int failAnalysisId);
 }

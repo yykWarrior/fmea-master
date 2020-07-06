@@ -11,12 +11,18 @@ import com.rb.fmea.dto.FunctionRelateDto;
 import com.rb.fmea.dto.StructureFunctionDto;
 import com.rb.fmea.entities.FmeaFunction;
 import com.rb.fmea.entities.FmeaFunctionRelate;
+import com.rb.fmea.entities.FmeaResume;
 import com.rb.fmea.entities.FmeaStructure;
 import com.rb.fmea.result.CodeMsg;
 import com.rb.fmea.result.Result;
 import com.rb.fmea.result.ReturnCode;
 import com.rb.fmea.service.FmeaFunctionService;
+import com.rb.fmea.service.FmeaResumeService;
+import com.rb.fmea.service.FmeaService;
+import com.rb.fmea.util.DateUtil;
+import com.rb.fmea.util.ObjectUtil;
 import com.rb.fmea.util.StringProcess;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -38,6 +44,10 @@ public class FmeaFunctionServiceImpl implements FmeaFunctionService {
     private FmeaStructureMapper fmeaStructureMapper;
     @Resource
     private FmeaFunctionRelateMapper fmeaFunctionRelateMapper;
+    @Autowired
+    private FmeaService fmeaService;
+    @Autowired
+    private FmeaResumeService fmeaResumeService;
     /**
      * @Author yyk
      * @Description //TODO 批量增加功能
@@ -68,10 +78,24 @@ public class FmeaFunctionServiceImpl implements FmeaFunctionService {
      * @return com.rb.fmea.result.Result
      **/
     @Override
-    public Result delete(String ids) {
+    public Result delete(String ids, int fmeaId) {
         try {
             String[] idArray = StringProcess.spliteString(ids, ",");
             for(int i=0;i<idArray.length;i++){
+                //查询fmea信息，返回fmea状态
+                Boolean aBoolean = fmeaService.selectByIdReturnState(fmeaId);
+                if(aBoolean) {
+                FmeaResume fmeaResume=new FmeaResume();
+                //生成履历
+                //查询出来功能信息
+                FmeaFunction fmeaFunction = fmeaFunctionMapper.selectByPrimaryKey(Integer.parseInt(idArray[i]));
+                //查询对应的结构
+                FmeaStructure fmeaStructure = fmeaStructureMapper.selectByPrimaryKey(fmeaFunction.getFmeaStructureId());
+                //修改前信息
+                String old="功能要求:"+fmeaFunction.getFunctionRequire()+";功能描述:"+fmeaFunction.getFunctionStandard();
+                fmeaResume.setFmeaId(fmeaId).setStep("功能").setStructureName(fmeaStructure==null?"":fmeaStructure.getStructureName()).setCreateDate(DateUtil.parseTime(new Date())).setBeforeChange(old).setAfterChange("");
+                fmeaResumeService.insert(fmeaResume);
+                }
                 fmeaFunctionMapper.deleteByPrimaryKey(Integer.parseInt(idArray[i]));
             }
             return Result.success();
@@ -89,10 +113,38 @@ public class FmeaFunctionServiceImpl implements FmeaFunctionService {
      * @return com.rb.fmea.result.Result
      **/
     @Override
-    public Result update(FmeaFunction fmeaFunction) {
+    public Result update(FmeaFunction fmeaFunction, int fmeaId) {
         try {
+            //查询fmea信息，返回fmea状态
+            Boolean aBoolean = fmeaService.selectByIdReturnState(fmeaId);
+            if(aBoolean){
+                FmeaResume fmeaResume=new FmeaResume();
+                StringBuilder oldString=new StringBuilder();
+                StringBuilder newString=new StringBuilder();
+                //生成履历信息
+                //查询原来的功能信息
+                FmeaFunction fmeaFunction1 = fmeaFunctionMapper.selectByPrimaryKey(fmeaFunction.getId());
+                //比较新值与旧值
+                Map<String, Object[]> compare = ObjectUtil.compare(fmeaFunction1, fmeaFunction);
+                Iterator<Map.Entry<String, Object[]>> iterator = compare.entrySet().iterator();
+                while (iterator.hasNext()){
+                    Map.Entry<String, Object[]> next = iterator.next();
+                    String key = next.getKey();
+                    String filedName = fmeaFunction.getFiledName(key);
+                    Object[] value = next.getValue();
+                    //旧值
+                    oldString.append(filedName).append(":").append(value[0]).append(";");
+                    //新值
+                    newString.append(filedName).append(":").append(value[1]).append(";");
+               }
+                if(!("".equals(oldString.toString())&&"".equals(newString.toString()))) {
+                    //查询对应的结构
+                    FmeaStructure fmeaStructure = fmeaStructureMapper.selectByPrimaryKey(fmeaFunction.getFmeaStructureId());
+                    fmeaResume.setAfterChange(newString.toString()).setBeforeChange(oldString.toString()).setCreateDate(DateUtil.parseTime(new Date())).setStep("功能").setFmeaId(fmeaId).setStructureName(fmeaStructure == null ? "" : fmeaStructure.getStructureName());
+                    fmeaResumeService.insert(fmeaResume);
+                }
+            }
             fmeaFunctionMapper.updateByPrimaryKey(fmeaFunction);
-            //生成履历信息
             return Result.success();
         } catch (Exception e) {
             return Result.error(new CodeMsg(ReturnCode.DATA_IS_WRONG,e.getMessage()));

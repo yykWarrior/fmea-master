@@ -31,7 +31,11 @@ public class FmeaBasicInformationServiceImpl implements FmeaBasicInformationServ
     @Override
     public Result insert(FmeaBasicInformation fmeaBasicInformation) {
         try {
-            fmeaBasicInformationMapper.insert(fmeaBasicInformation);
+            //查询是否已经添加
+            FmeaBasicInformation fmeaBasicInformation1 = fmeaBasicInformationMapper.selectByFmeaId(fmeaBasicInformation.getFmeaId());
+            if(fmeaBasicInformation1==null){
+                fmeaBasicInformationMapper.insert(fmeaBasicInformation);
+            }
             return Result.success();
         } catch (Exception e) {
             return Result.error(new CodeMsg(ReturnCode.DATA_IS_WRONG,e.getMessage()));

@@ -57,16 +57,31 @@ public class ProductController {
 
     /**
      * @Author yyk
-     * @Description //TODO 修改产品信息
+     * @Description //TODO 修改产品信息有文件
      * @Date 2020/5/20 15:36
      * @Param [ids]
      * @return com.rb.fmea.result.Result
      **/
-    @ApiOperation(value = "修改产品")
+    @ApiOperation(value = "修改产品有文件",notes = "修改产品有文件")
     @RequestMapping(value = "product/update",method = RequestMethod.POST)
-    public Result updateProduct(Product product){
-        return productService.updateProduct(product);
+    public Result updateProduct(MultipartFile multipartFile,Product product){
+        return productService.updateProduct(multipartFile,product);
     }
+
+
+    /**
+     * @Author yyk
+     * @Description //TODO 修改产品信息无文件
+     * @Date 2020/5/20 15:36
+     * @Param [ids]
+     * @return com.rb.fmea.result.Result
+     **/
+    @ApiOperation(value = "修改产品无文件",notes = "修改产品无文件")
+    @RequestMapping(value = "product/updateNoFile",method = RequestMethod.POST)
+    public Result updateProductNoFile(Product product){
+        return productService.updateProductNoFile(product);
+    }
+
 
     /**
      * @Author yyk

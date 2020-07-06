@@ -31,7 +31,11 @@ public class FmeaMilestoneTimeServiceImpl implements FmeaMilestoneTimeService {
     @Override
     public Result insert(FmeaMilestoneTime fmeaMilestoneTime) {
         try {
-            fmeaMilestoneTimeMapper.insert(fmeaMilestoneTime);
+            //查询是否已经添加
+            FmeaMilestoneTime fmeaMilestoneTime1 = fmeaMilestoneTimeMapper.selectByFmeaId(fmeaMilestoneTime.getFmeaId());
+            if(fmeaMilestoneTime1==null) {
+                fmeaMilestoneTimeMapper.insert(fmeaMilestoneTime);
+            }
             return Result.success();
         } catch (Exception e) {
             return Result.error(new CodeMsg(ReturnCode.DATA_IS_WRONG,e.getMessage()));

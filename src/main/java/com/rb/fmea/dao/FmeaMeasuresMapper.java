@@ -1,7 +1,9 @@
 package com.rb.fmea.dao;
 
+import com.rb.fmea.dto.OptMeasureDto;
 import com.rb.fmea.entities.FmeaMeasures;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -46,4 +48,67 @@ public interface FmeaMeasuresMapper {
      * @mbggenerated
      */
     int updateByPrimaryKey(FmeaMeasures record);
+
+    /**
+     * @Author yyk
+     * @Description //TODO 根据是否优化，和措施类别查询
+     * @Date 2020/6/5 13:59
+     * @Param [fmeaMeasuresCategory, optimizeMeasures]
+     * @return java.util.List<com.rb.fmea.entities.FmeaMeasures>
+     **/
+    List<FmeaMeasures> selectFmeaMeasuresCategoryAndOptimizeMeasures(@Param("fmeaMeasuresCategory") int fmeaMeasuresCategory, @Param("optimizeMeasures") int optimizeMeasures);
+
+    /**
+     * @Author yyk
+     * @Description //TODO 根据结构id查询对应下的所有措施
+     * @Date 2020/6/9 16:05
+     * @Param [structureId]
+     * @return java.util.List<com.rb.fmea.entities.FmeaMeasures>
+     **/
+    List<FmeaMeasures> selectByStructureId(@Param("structureId") int structureId, @Param("page") int page, @Param("limit") int limit, @Param("state") int state);
+
+    /**
+     * @Author yyk
+     * @Description //TODO 查询总条数
+     * @Date 2020/6/10 9:28
+     * @Param [structureId]
+     * @return int
+     **/
+    int count(@Param("structureId") int structureId, @Param("state") int state);
+
+    /**
+     * @Author yyk
+     * @Description //TODO 一个产品下的优化措施监控
+     * @Date 2020/6/19 16:49
+     * @Param [productId, page, limit]
+     * @return java.util.List<com.rb.fmea.dto.OptMeasureDto>
+     **/
+    List<OptMeasureDto> selectOptMeasureOneProduct(@Param("productId") int productId, @Param("page") int page, @Param("limit") int limit);
+
+    /**
+     * @Author yyk
+     * @Description //TODO 一个产品下优化措施总条数
+     * @Date 2020/6/19 16:50
+     * @Param [productId]
+     * @return int
+     **/
+    int countOneProduct(int productId);
+
+    /**
+     * @Author yyk
+     * @Description //TODO 修改不执行状态
+     * @Date 2020/6/20 9:14
+     * @Param [measureId]
+     * @return void
+     **/
+    void updateState(int measureId);
+
+    /**
+     * @Author yyk
+     * @Description //TODO 根据产品和状态查询
+     * @Date 2020/6/20 13:35
+     * @Param [id, state]
+     * @return java.util.List<com.rb.fmea.entities.FmeaMeasures>
+     **/
+    List<FmeaMeasures> selectByProductIdAndState(@Param("productId") Integer productId, @Param("state") int state);
 }

@@ -1,6 +1,8 @@
 package com.rb.fmea.service;
 
 import com.rb.fmea.entities.FmeaResume;
+import com.rb.fmea.page.PageParameter;
+import com.rb.fmea.result.ResultDto;
 
 /**
  * @version v1.0
@@ -20,4 +22,13 @@ public interface FmeaResumeService {
      * @return void
      **/
     void insert(FmeaResume fmeaResume);
+
+    /**
+     * @Author yyk
+     * @Description //TODO 分页查询单个fmea下的履历信息
+     * @Date 2020/6/17 8:15
+     * @Param [fmeaId]
+     * @return com.rb.fmea.result.ResultDto
+     **/
+    ResultDto selectByFmeaId(int fmeaId, PageParameter pageParameter);
 }

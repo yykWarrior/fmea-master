@@ -16,6 +16,7 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * @version v1.0
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @Author: yyk
  * @Date: 2020/5/29 14:55
  */
+@ApiIgnore
 @Api(description = "redis")
 @RestController
 public class RedisTest {

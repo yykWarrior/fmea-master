@@ -74,4 +74,18 @@
     `desc`, fmea_id
     from fmea_resume
   </select>
+
+    <!--分页查询单个fmea下的履历信息-->
+    <select id="selectByFmeaId" resultMap="BaseResultMap" >
+        select id, structure_name, step, before_change, after_change, create_date, create_by,
+        `desc`, fmea_id
+        from fmea_resume where fmea_id=#{fmeaId} order by create_date asc offest #{page} limit #{limit}
+    </select>
+
+    <!--查询单个fmea履历的总条数-->
+    <select id="count" resultType="java.lang.Integer" >
+        select count(id)
+        from fmea_resume where fmea_id=#{fmeaId}
+    </select>
+
 </mapper>

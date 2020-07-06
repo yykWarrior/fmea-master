@@ -27,7 +27,7 @@ public interface FmeaFunctionService {
      * @Param [ids]
      * @return com.rb.fmea.result.Result
      **/
-    Result delete(String ids);
+    Result delete(String ids, int fmeaId);
 
     /**
      * @Author yyk
@@ -36,7 +36,7 @@ public interface FmeaFunctionService {
      * @Param [fmeaFunction]
      * @return com.rb.fmea.result.Result
      **/
-    Result update(FmeaFunction fmeaFunction);
+    Result update(FmeaFunction fmeaFunction, int fmeaId);
 
     /**
      * @Author yyk

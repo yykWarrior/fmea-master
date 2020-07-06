@@ -38,6 +38,9 @@ public class FmeaTeamServiceImpl implements FmeaTeamService {
             JSONArray jsonArray = JSONArray.parseArray(fmeaTeams);
             List<FmeaTeam> fmeaTeamList = JSONObject.parseArray(jsonArray.toJSONString(), FmeaTeam.class);
             for(FmeaTeam fmeaTeam:fmeaTeamList){
+                if(fmeaTeam.getFmeaId()==null){
+                    return Result.error(new CodeMsg(ReturnCode.DATA_IS_WRONG,"请先选择产品,再添加小组信息"));
+                }
                 fmeaTeamMapper.insert(fmeaTeam);
             }
             return Result.success();

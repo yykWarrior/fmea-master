@@ -85,4 +85,10 @@ public interface FmeaStructureMapper {
      * @return void
      **/
     void delete(int id);
+
+    FmeaStructure selectByFailAnalysisId(int failAnalysisId);
+
+    FmeaStructure selectByMeasureId(int measureId);
+
+    FmeaStructure selectSecondTree(int fmeaId);
 }

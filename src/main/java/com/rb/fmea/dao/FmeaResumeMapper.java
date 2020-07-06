@@ -1,7 +1,9 @@
 package com.rb.fmea.dao;
 
 import com.rb.fmea.entities.FmeaResume;
+import com.rb.fmea.page.PageParameter;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 @Mapper
@@ -45,4 +47,22 @@ public interface FmeaResumeMapper {
      * @mbggenerated
      */
     int updateByPrimaryKey(FmeaResume record);
+
+    /**
+     * @Author yyk
+     * @Description //TODO 分页查询单个fmea下的履历信息
+     * @Date 2020/6/17 8:17
+     * @Param [fmeaId]
+     * @return java.util.List<com.rb.fmea.entities.FmeaResume>
+     **/
+    List<FmeaResume> selectByFmeaId(@Param("fmeaId") int fmeaId, @Param("page") int page, @Param("limit") int limit);
+
+    /**
+     * @Author yyk
+     * @Description //TODO 查询单个fmea履历的总条数
+     * @Date 2020/6/17 8:22
+     * @Param [fmeaId]
+     * @return int
+     **/
+    int count(int fmeaId);
 }

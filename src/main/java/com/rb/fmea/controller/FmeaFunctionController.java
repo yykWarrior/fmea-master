@@ -7,10 +7,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @version v1.0
@@ -35,7 +32,7 @@ public class FmeaFunctionController {
      **/
     @ApiOperation(value = "功能增加接口",notes = "功能增加接口")
     @RequestMapping(value = "fmeaFunction/insert",method = RequestMethod.POST)
-    public Result insert(String functions,int structureId){
+    public Result insert(String functions, int structureId){
         return fmeaFunctionService.insert(functions,structureId);
     }
 
@@ -49,8 +46,8 @@ public class FmeaFunctionController {
      **/
     @ApiOperation(value = "删除功能",notes = "删除功能")
     @RequestMapping(value = "fmeaFunction/delete/{ids}",method = RequestMethod.GET)
-    public Result delete(@PathVariable("ids") String ids){
-        return fmeaFunctionService.delete(ids);
+    public Result delete(@PathVariable("ids") String ids,int fmeaId){
+        return fmeaFunctionService.delete(ids,fmeaId);
     }
 
     /**
@@ -62,8 +59,8 @@ public class FmeaFunctionController {
      **/
     @ApiOperation(value = "修改功能",notes = "修改功能")
     @RequestMapping(value = "fmeaFunction/update",method = RequestMethod.POST)
-    public Result update(FmeaFunction fmeaFunction){
-        return fmeaFunctionService.update(fmeaFunction);
+    public Result update(FmeaFunction fmeaFunction,int fmeaId){
+        return fmeaFunctionService.update(fmeaFunction,fmeaId);
 
     }
 

@@ -66,4 +66,8 @@ public interface FmeaMapper {
      * @return java.util.List<com.rb.fmea.entities.Fmea>
      **/
     List<FmeaDto> selectByProductId(@Param("productId") int productId, @Param("fmeaId") int fmeaId);
+
+    int deleteByProductId(int id);
+
+    Integer delete(@Param("id") Integer id);
 }

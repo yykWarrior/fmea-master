@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * @version v1.0
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @Author: yyk
  * @Date: 2020/5/29 11:21
  */
+
 @RestController
 @Api(description = "失效分析接口")
 public class FmeaFailAnalysisController {
@@ -26,16 +28,19 @@ public class FmeaFailAnalysisController {
 
     /**
      * @Author yyk
-     * @Description //TODO 在一个功能下添加多个功能分析
+     * @Description //TODO 在一个功能下添加多个失效分析
      * @Date 2020/5/29 14:25
      * @Param [functionId, fmeaFailAnalysis]
      * @return com.rb.fmea.result.Result
      **/
     @ApiOperation(value = "在一个功能下添加多个功能分析",notes = "在一个功能下添加多个功能分析")
     @RequestMapping(value = "analysis/insert",method = RequestMethod.POST)
-    public Result insert(int functionId,String fmeaFailAnalysisDesc){
-        return fmeaFailAnalysisService.insert(functionId,fmeaFailAnalysisDesc);
+    public Result insert(String fmeaFailAnalysis){
+        return fmeaFailAnalysisService.insert(fmeaFailAnalysis);
     }
+    /*public Result insert(int functionId,String fmeaFailAnalysisDesc){
+        return fmeaFailAnalysisService.insert(functionId,fmeaFailAnalysisDesc);
+    }*/
 
 
     /**
@@ -47,8 +52,8 @@ public class FmeaFailAnalysisController {
      **/
     @ApiOperation(value = "删除失效分析",notes = "删除失效分析")
     @RequestMapping(value = "analysis/delete/{ids}",method = RequestMethod.GET)
-    public Result delete(@PathVariable("ids") String ids){
-        return fmeaFailAnalysisService.delete(ids);
+    public Result delete(@PathVariable("ids") String ids,int fmeaId){
+        return fmeaFailAnalysisService.delete(ids,fmeaId);
     }
 
     /**
@@ -60,8 +65,8 @@ public class FmeaFailAnalysisController {
      **/
     @ApiOperation(value = "修改失效分析",notes = "修改失效分析")
     @RequestMapping(value = "analysis/update",method = RequestMethod.POST)
-    public Result update(FmeaFailAnalysis fmeaFailAnalysis){
-        return fmeaFailAnalysisService.update(fmeaFailAnalysis);
+    public Result update(FmeaFailAnalysis fmeaFailAnalysis,int fmeaId){
+        return fmeaFailAnalysisService.update(fmeaFailAnalysis,fmeaId);
     }
 
 

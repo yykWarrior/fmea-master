@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rb.fmea.dao.DocumentMapper" >
+  <resultMap id="BaseResultMap" type="com.rb.fmea.entities.Document" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="target_status_description" property="targetStatusDescription" jdbcType="VARCHAR" />
+    <result column="scope_content" property="scopeContent" jdbcType="VARCHAR" />
+    <result column="function_result" property="functionResult" jdbcType="VARCHAR" />
+    <result column="high_risk_result" property="highRiskResult" jdbcType="VARCHAR" />
+      <result column="high_risk_measure_result" property="highRiskMeasureResult" jdbcType="VARCHAR" />
+      <result column="opt_plan" property="optPlan" jdbcType="VARCHAR" />
+      <result column="lesson_learned" property="lessonLearned" jdbcType="VARCHAR" />
+      <result column="path" property="path" jdbcType="VARCHAR" />
+      <result column="fmea_id" property="fmeaId" jdbcType="INTEGER" />
+  </resultMap>
+
+    <!--插入文件化信息-->
+    <insert id="insert" parameterType="com.rb.fmea.entities.Document" >
+        <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+            SELECT LAST_INSERT_ROWID()
+        </selectKey>
+        insert into document (target_status_description,scope_content,function_result,high_risk_result,high_risk_measure_result,opt_plan,lesson_learned,path,fmea_id)
+        values (#{targetStatusDescription,jdbcType=VARCHAR}, #{scopeContent,jdbcType=VARCHAR}, #{functionResult,jdbcType=VARCHAR},
+        #{highRiskResult,jdbcType=VARCHAR},#{highRiskMeasureResult,jdbcType=VARCHAR},#{optPlan,jdbcType=VARCHAR},#{lessonLearned,jdbcType=VARCHAR}, #{path,jdbcType=VARCHAR},#{fmeaId,jdbcType=INTEGER})
+    </insert>
+
+    <delete id="delete" parameterType="java.lang.Integer" >
+        delete from document
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+
+    <update id="update" parameterType="com.rb.fmea.entities.Document">
+        update document
+        set target_status_description=#{targetStatusDescription},
+        scope_content=#{scopeContent},
+        function_result=#{functionResult},
+        high_risk_result=#{highRiskResult},
+        high_risk_measure_result=#{highRiskMeasureResult},
+        opt_plan=#{optPlan},
+        lesson_learned=#{lessonLearned}
+    </update>
+</mapper>

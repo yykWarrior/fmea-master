@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * @version v1.0
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @Author: yyk
  * @Date: 2020/6/3 16:00
  */
+
 @Api(description = "fmea基础信息-里程碑时间接口")
 @RestController
 public class FmeaMilestoneTimeController {
@@ -75,4 +77,7 @@ public class FmeaMilestoneTimeController {
     public Result selectByFmeaId(@PathVariable("fmeaId") int fmeaId){
         return fmeaMilestoneTimeService.selectByFmeaId(fmeaId);
     }
+
+
+
 }

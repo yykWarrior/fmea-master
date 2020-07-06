@@ -75,4 +75,32 @@ public interface FmeaFailAnalysisMapper {
      * @return java.util.List<com.rb.fmea.entities.FmeaFailAnalysis>
      **/
     List<FmeaFailAnalysis> selectNextFunction(int fmeaFailAnalysisId);
+
+    /**
+     * @Author yyk
+     * @Description //TODO 查询总成的严重度
+     * @Date 2020/6/5 14:29
+     * @Param [failAnalysisId]
+     * @return java.util.List<com.rb.fmea.entities.FmeaFailAnalysis>
+     **/
+    List<FmeaFailAnalysis> selectAssemblySeverityByFailAnalysisId(int failAnalysisId);
+
+    /**
+     * @Author yyk
+     * @Description //TODO 查询客户的严重度
+     * @Date 2020/6/5 14:29
+     * @Param [failAnalysisId]
+     * @return java.util.List<com.rb.fmea.entities.FmeaFailAnalysis>
+     **/
+    List<FmeaFailAnalysis> selectCustomerSeverityByFailAnalysisId(int failAnalysisId);
+
+
+    /**
+     * @Author yyk
+     * @Description //TODO 查询一个fmea下的所有失效分析
+     * @Date 2020/6/15 9:24
+     * @Param [fmeaId]
+     * @return java.util.List<com.rb.fmea.entities.FmeaFailAnalysis>
+     **/
+    List<FmeaFailAnalysis> selectFailAnalysisByFmeaId(int fmeaId);
 }

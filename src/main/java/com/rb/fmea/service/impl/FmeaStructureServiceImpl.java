@@ -47,8 +47,9 @@ public class FmeaStructureServiceImpl implements FmeaStructureService {
         try {
             //插入客户信息
             FmeaStructure fmeaStructure=new FmeaStructure(customer,customerDesc,0,fmeaId);
-            int customerId = fmeaStructureMapper.insert(fmeaStructure);
-            //插入总成信息
+            fmeaStructureMapper.insert(fmeaStructure);
+            int customerId =fmeaStructure.getId();
+                    //插入总成信息
             FmeaStructure fmeaStructure1=new FmeaStructure(assembly,assemblyDesc,customerId,fmeaId);
             fmeaStructureMapper.insert(fmeaStructure1);
             return Result.success(fmeaStructure1.getId());

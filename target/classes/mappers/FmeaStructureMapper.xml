@@ -111,4 +111,27 @@
     )
         select id from cao)
     </delete>
+
+
+    <!--根据失效id查询对应的结构信息-->
+    <select id="selectByFailAnalysisId" resultMap="BaseResultMap" >
+        select id, structure_name, structure_desc, superior_id, fmea_id
+        from fmea_structure where id=(select fmea_structure_id from fmea_function where id=(select function_id from fmea_fail_analysis where id=#{failAnalysisId}))
+    </select>
+
+
+    <!--根据措施id查询对应的结构信息-->
+    <select id="selectByMeasureId" resultMap="BaseResultMap" >
+       select id, structure_name, structure_desc, superior_id, fmea_id
+        from fmea_structure where id=(select fmea_structure_id from fmea_function where id=(
+        select function_id from fmea_fail_analysis where id=(
+        select fmea_fail_analysis_id from fmea_measures where id=#{measureId})))
+    </select>
+
+    <!--根据fmeaId查询总成信息-->
+    <select id="selectSecondTree" resultMap="BaseResultMap" >
+        select id, structure_name, structure_desc, superior_id, fmea_id
+        from fmea_structure where superior_id=(select id from fmea_structure where superior_id=0 and fmea_id=#{fmeaId})
+    </select>
+
 </mapper>

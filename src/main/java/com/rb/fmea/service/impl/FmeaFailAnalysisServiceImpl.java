@@ -1,28 +1,25 @@
 package com.rb.fmea.service.impl;
 
-import com.rb.fmea.dao.FmeaFailAnalysisMapper;
-import com.rb.fmea.dao.FmeaFailAnalysisRelateMapper;
-import com.rb.fmea.dao.FmeaFunctionMapper;
-import com.rb.fmea.dao.FmeaStructureMapper;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.rb.fmea.dao.*;
 import com.rb.fmea.dto.FmeaFailAnalysisDto;
 import com.rb.fmea.dto.FmeaFunctionDto;
 import com.rb.fmea.dto.FmeaStructureDto;
-import com.rb.fmea.entities.FmeaFailAnalysis;
-import com.rb.fmea.entities.FmeaFailAnalysisRelate;
-import com.rb.fmea.entities.FmeaFunction;
-import com.rb.fmea.entities.FmeaStructure;
+import com.rb.fmea.entities.*;
 import com.rb.fmea.result.CodeMsg;
 import com.rb.fmea.result.Result;
 import com.rb.fmea.result.ReturnCode;
 import com.rb.fmea.service.FmeaFailAnalysisService;
+import com.rb.fmea.service.FmeaService;
+import com.rb.fmea.util.DateUtil;
+import com.rb.fmea.util.ObjectUtil;
 import com.rb.fmea.util.StringProcess;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -42,6 +39,10 @@ public class FmeaFailAnalysisServiceImpl implements FmeaFailAnalysisService {
     private FmeaFunctionMapper fmeaFunctionMapper;
     @Resource
     private FmeaStructureMapper fmeaStructureMapper;
+    @Resource
+    private FmeaResumeMapper fmeaResumeMapper;
+    @Autowired
+    private FmeaService fmeaService;
     /**
      * @Author yyk
      * @Description //TODO 删除失效分析
@@ -50,10 +51,28 @@ public class FmeaFailAnalysisServiceImpl implements FmeaFailAnalysisService {
      * @return com.rb.fmea.result.Result
      **/
     @Override
-    public Result delete(String ids) {
+    public Result delete(String ids, int fmeaId) {
         try {
             String[] idArray = StringProcess.spliteString(ids, ",");
             for(String id:idArray){
+                //查询fmea信息，返回fmea状态
+                Boolean aBoolean = fmeaService.selectByIdReturnState(fmeaId);
+                if(aBoolean) {
+                    FmeaResume fmeaResume = new FmeaResume();
+                    //查询对应的失效模式
+                    FmeaFailAnalysis fmeaFailAnalysis = fmeaFailAnalysisMapper.selectByPrimaryKey(Integer.parseInt(id));
+                    String old="";
+                    if(fmeaFailAnalysis.getSeverity()==0){
+                        old = "失效模式:" + fmeaFailAnalysis.getFmeaFailAnalysisDesc();
+                    }else {
+                         old = "失效模式:" + fmeaFailAnalysis.getFmeaFailAnalysisDesc() + ";严重度:" + fmeaFailAnalysis.getSeverity();
+                    }
+                    //根据失效id查询对应的结构信息
+                    FmeaStructure fmeaStructure = fmeaStructureMapper.selectByFailAnalysisId(Integer.parseInt(id));
+                    fmeaResume.setAfterChange("").setBeforeChange(old).setCreateDate(DateUtil.parseTime(new Date())).setStructureName(fmeaStructure == null ? "" : fmeaStructure.getStructureName()).setStep("失效").setFmeaId(fmeaId);
+                    //生成履历信息
+                    fmeaResumeMapper.insert(fmeaResume);
+                }
                 fmeaFailAnalysisMapper.deleteByPrimaryKey(Integer.parseInt(id));
             }
             return Result.success();
@@ -71,11 +90,38 @@ public class FmeaFailAnalysisServiceImpl implements FmeaFailAnalysisService {
      * @return com.rb.fmea.result.Result
      **/
     @Override
-    public Result update(FmeaFailAnalysis fmeaFailAnalysis) {
+    public Result update(FmeaFailAnalysis fmeaFailAnalysis, int fmeaId) {
         try {
+            //查询fmea信息，返回fmea状态
+            Boolean aBoolean = fmeaService.selectByIdReturnState(fmeaId);
+            if(aBoolean) {
+                FmeaResume fmeaResume = new FmeaResume();
+                StringBuilder oldString = new StringBuilder();
+                StringBuilder newString = new StringBuilder();
+                //生成履历信息
+                //查询出更改前失效模式的信息
+                FmeaFailAnalysis fmeaFailAnalysis1 = fmeaFailAnalysisMapper.selectByPrimaryKey(fmeaFailAnalysis.getId());
+                Map<String, Object[]> compare = ObjectUtil.compare(fmeaFailAnalysis1, fmeaFailAnalysis);
+                Iterator<Map.Entry<String, Object[]>> iterator = compare.entrySet().iterator();
+                while (iterator.hasNext()) {
+                    Map.Entry<String, Object[]> next = iterator.next();
+                    String key = next.getKey();
+                    String filedName = fmeaFailAnalysis.getName(key);
+                    Object[] value = next.getValue();
+                    //旧值
+                    oldString.append(filedName).append(":").append(value[0]).append(";");
+                    //新值
+                    newString.append(filedName).append(":").append(value[1]).append(";");
+                }
+                if(!("".equals(oldString.toString())&&"".equals(newString.toString()))) {
+                    //根据失效id查询对应的结构信息
+                    FmeaStructure fmeaStructure = fmeaStructureMapper.selectByFailAnalysisId(fmeaFailAnalysis1.getId());
+                    fmeaResume.setAfterChange(newString.toString()).setBeforeChange(oldString.toString()).setCreateDate(DateUtil.parseTime(new Date())).setStructureName(fmeaStructure == null ? "" : fmeaStructure.getStructureName()).setStep("失效").setFmeaId(fmeaId);
+                    //生成履历信息
+                    fmeaResumeMapper.insert(fmeaResume);
+                }
+            }
             fmeaFailAnalysisMapper.updateByPrimaryKey(fmeaFailAnalysis);
-            //生成履历信息
-
             return Result.success();
         } catch (Exception e) {
             return Result.error(new CodeMsg(ReturnCode.DATA_IS_WRONG,e.getMessage()));
@@ -118,8 +164,22 @@ public class FmeaFailAnalysisServiceImpl implements FmeaFailAnalysisService {
      * @return com.rb.fmea.result.Result
      **/
     @Override
-    public Result insert(int functionId, String fmeaFailAnalysisDesc) {
+    public Result insert(String fmeaFailAnalysis) {
+
         try {
+            JSONArray jsonArray = JSONArray.parseArray(fmeaFailAnalysis);
+            List<FmeaFailAnalysis> list = JSONObject.parseArray(jsonArray.toJSONString(), FmeaFailAnalysis.class);
+            for(FmeaFailAnalysis fmeaFailAnalysis1:list){
+                if(fmeaFailAnalysis1.getSeverity()==null){
+                    fmeaFailAnalysis1.setSeverity(0);
+                }
+                fmeaFailAnalysisMapper.insert(fmeaFailAnalysis1);
+            }
+            return Result.success();
+        } catch (Exception e) {
+            return Result.error(new CodeMsg(ReturnCode.DATA_IS_WRONG,e.getMessage()));
+        }
+       /* try {
             String[] descArray=StringProcess.spliteString(fmeaFailAnalysisDesc,",");
             for(String desc:descArray){
                 FmeaFailAnalysis fmeaFailAnalysis=new FmeaFailAnalysis();
@@ -130,7 +190,7 @@ public class FmeaFailAnalysisServiceImpl implements FmeaFailAnalysisService {
             return Result.success();
         } catch (Exception e) {
             return Result.error(new CodeMsg(ReturnCode.DATA_IS_WRONG,e.getMessage()));
-        }
+        }*/
 
     }
 
@@ -317,6 +377,24 @@ public class FmeaFailAnalysisServiceImpl implements FmeaFailAnalysisService {
         } catch (Exception e) {
             return Result.error(new CodeMsg(ReturnCode.DATA_IS_WRONG,e.getMessage()));
         }
+    }
+
+
+    /**
+     * @Author yyk
+     * @Description //TODO 根据失效分析id查询严重度
+     * @Date 2020/6/5 14:25
+     * @Param [failAnalysisId]
+     * @return java.util.List<com.rb.fmea.entities.FmeaFailAnalysis>
+     **/
+    @Override
+    public List<FmeaFailAnalysis> selectSeverityByFailAnalysisId(int failAnalysisId) {
+        //查询总成的严重度
+        List<FmeaFailAnalysis> fmeaFailAnalysisList0=fmeaFailAnalysisMapper.selectAssemblySeverityByFailAnalysisId(failAnalysisId);
+        //查询客户的严重度
+        List<FmeaFailAnalysis> fmeaFailAnalysisList1=fmeaFailAnalysisMapper.selectCustomerSeverityByFailAnalysisId(failAnalysisId);
+        fmeaFailAnalysisList0.addAll(fmeaFailAnalysisList1);
+        return fmeaFailAnalysisList0;
     }
 
 

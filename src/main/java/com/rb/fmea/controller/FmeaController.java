@@ -80,9 +80,29 @@ public class FmeaController {
         return fmeaService.delete(ids);
     }
 
+    /**
+     * @Author yyk
+     * @Description //TODO 查询一个产品下对应的基础,家族,新品fmea
+     * @Date 2020/6/19 11:17
+     * @Param [productId]
+     * @return com.rb.fmea.result.Result
+     **/
     @ApiOperation(value = "查询一个产品下对应的基础,家族,新品fmea",notes = "查询一个产品下对应的基础,家族,新品fmea")
     @RequestMapping(value = "fmea/selectByProductId/{productId}",method = RequestMethod.GET)
     public Result selectByProductId(@PathVariable("productId") int productId){
         return fmeaService.selectByProductId(productId);
+    }
+
+    /**
+     * @Author yyk
+     * @Description //TODO 点击fmea完成，更新状态和完成时间
+     * @Date 2020/7/1 16:19
+     * @Param
+     * @return
+     **/
+    @ApiOperation(value = "点击fmea完成，更新状态和完成时间",notes = "点击fmea完成，更新状态和完成时间")
+    @RequestMapping(value = "/fmea/updateState/{fmeaId}",method = RequestMethod.GET)
+    public Result updateState(@PathVariable("fmeaId") int fmeaId){
+        return fmeaService.updateState(fmeaId);
     }
 }

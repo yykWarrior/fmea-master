@@ -46,7 +46,7 @@ public class Swagger2 {
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 //页面标题
-                .title("Spring Boot 使用 Swagger2")
+                .title("fmea系统API")
                 //创建人
                 .contact(new Contact("yyk", "", ""))
                 //版本号

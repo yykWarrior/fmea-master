@@ -2,6 +2,7 @@ package com.rb.fmea.dao;
 
 import com.rb.fmea.entities.Product;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 @Mapper
@@ -53,7 +54,7 @@ public interface ProductMapper {
      * @Param [name, page, limit]
      * @return java.util.List<com.rb.fmea.entities.Product>
      **/
-    List<Product> selectByNameAndPage(String name, int page, int limit);
+    List<Product> selectByNameAndPage(@Param("name") String name, @Param("page") int page, @Param("limit") int limit);
 
     /**
      * @Author yyk
@@ -62,5 +63,5 @@ public interface ProductMapper {
      * @Param [name]
      * @return int
      **/
-    int count(String name);
+    int count(@Param("name") String name);
 }

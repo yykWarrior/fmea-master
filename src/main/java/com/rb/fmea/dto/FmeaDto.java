@@ -35,4 +35,6 @@ public class FmeaDto  {
 
     private List<FmeaDto> familyFmeaList;
 
+    private int state;
+
 }

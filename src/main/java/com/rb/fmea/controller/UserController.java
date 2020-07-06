@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 
 import javax.annotation.Resource;
@@ -31,6 +32,7 @@ import java.util.UUID;
  * @Author: yyk
  * @Date: 2020/5/16 15:48
  */
+@ApiIgnore
 @Api(description = "用户操作接口")
 @RestController
 @RequestMapping("/user")

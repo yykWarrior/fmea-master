@@ -3,6 +3,8 @@ package com.rb.fmea.service;
 import com.rb.fmea.entities.Fmea;
 import com.rb.fmea.result.Result;
 
+import java.util.List;
+
 /**
  * @version v1.0
  * @ClassName: FmeaService
@@ -55,4 +57,17 @@ public interface FmeaService {
      * @return com.rb.fmea.result.Result
      **/
     Result selectByProductId(int productId);
+
+    /**
+     * @Author yyk
+     * @Description //TODO 查询所有fmea
+     * @Date 2020/6/16 9:52
+     * @Param []
+     * @return java.util.List<com.rb.fmea.entities.Fmea>
+     **/
+    List<Fmea> selectAll();
+
+    Result updateState(int fmeaId);
+
+    Boolean selectByIdReturnState(int fmeaId);
 }

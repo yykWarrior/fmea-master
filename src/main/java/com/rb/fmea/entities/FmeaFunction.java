@@ -132,4 +132,14 @@ public class FmeaFunction implements Serializable {
                 ", fmeaStructureId=" + fmeaStructureId +
                 '}';
     }
+
+    public String getFiledName(String fieldName){
+        if("functionStandard".equals(fieldName)){
+            return "功能描述";
+        }else if("functionRequire".equals(fieldName)){
+            return "功能要求";
+        }else {
+            return "";
+        }
+    }
 }
