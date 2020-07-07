@@ -34,8 +34,8 @@ public class ShiroConfig {
         shiroFilterFactoryBean.setSecurityManager(defaultWebSecurityManager);
         //过滤资源
         LinkedHashMap<String, String> map = new LinkedHashMap<>();
-        map.put("/fmeaFunction/selectOneFmea/*","perms[fmeaFunction:selectOneFmea]");
-        map.put("/fmeaFunction/selectFunctionRelate/*","perms[function:selectFunctionRelate]");
+        /*map.put("/fmeaFunction/selectOneFmea/*","perms[fmeaFunction:selectOneFmea]");
+        map.put("/fmeaFunction/selectFunctionRelate/*","perms[function:selectFunctionRelate]");*/
         //map.put("/*","authc");
         map.put("/*","anon");
 

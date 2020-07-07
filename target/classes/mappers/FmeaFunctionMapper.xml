@@ -22,6 +22,12 @@
     delete from fmea_function
     where id = #{id,jdbcType=INTEGER}
   </delete>
+
+
+    <delete id="deleteRelate"  >
+        delete from fmea_function_relate
+        where id = #{id}
+    </delete>
   <insert id="insert" parameterType="com.rb.fmea.entities.FmeaFunction" >
     <!--
       WARNING - @mbggenerated

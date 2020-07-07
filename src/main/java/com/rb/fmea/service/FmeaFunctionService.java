@@ -82,4 +82,6 @@ public interface FmeaFunctionService {
      * @return com.rb.fmea.result.Result
      **/
     Result selectNextStructureAndFunction(int structureId);
+
+    Result deleteRelate(int superiorId,int nextId);
 }

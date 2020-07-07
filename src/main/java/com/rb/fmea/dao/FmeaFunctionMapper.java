@@ -65,4 +65,13 @@ public interface FmeaFunctionMapper {
      * @return java.util.List<com.rb.fmea.entities.FmeaFunction>
      **/
     List<FmeaFunctionDto> selectOneFmea(int fmeaId);
+
+    /**
+     * @Author yyk
+     * @Description //TODO 删除功能关系,根据上下级id
+     * @Date 2020/7/7 17:41
+     * @Param [superiorId, nextId]
+     * @return void
+     **/
+    void deleteRelate(int superiorId, int nextId);
 }

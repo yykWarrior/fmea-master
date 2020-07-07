@@ -1,5 +1,8 @@
 package com.rb.fmea.entities;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 import java.io.Serializable;
 
 
@@ -207,5 +210,8 @@ public class ReviewResultSum implements Serializable {
         this.month = month;
         this.fmeaId = fmeaId;
         this.totalNum = totalNum;
+    }
+
+    public ReviewResultSum() {
     }
 }

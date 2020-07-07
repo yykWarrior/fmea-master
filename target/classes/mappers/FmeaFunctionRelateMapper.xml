@@ -94,4 +94,9 @@
     from fmea_function_relate ffr inner join fmea_function ff on ffr.function_superior_id=ff.id where ffr.function_next_id= #{structureId}) m
     left join fmea_structure s on m.fmea_structure_id=s.id
     </select>
+
+    <select id="selectBySuperiorIdAndNextId" resultMap="BaseResultMap" >
+        select id, function_superior_id, function_next_id
+        from fmea_function_relate where function_next_id=#{nextId} and function_superior_id=#{superiorId}
+    </select>
 </mapper>

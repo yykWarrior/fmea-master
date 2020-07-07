@@ -132,4 +132,17 @@ public class FmeaFunctionController {
     public Result selectNextStructure(@PathVariable("structureId") int structureId){
         return fmeaFunctionService.selectNextStructureAndFunction(structureId);
     }
+
+    /**
+     * @Author yyk
+     * @Description //TODO 删除功能关系,根据上下级id
+     * @Date 2020/7/7 17:00
+     * @Param []
+     * @return com.rb.fmea.result.Result
+     **/
+    @ApiOperation(value = "删除功能关系",notes = "删除功能关系")
+    @RequestMapping(value = "fmeaFunction/deleteRelate/{superiorId}/{nextId}",method = RequestMethod.GET)
+    public Result deleteRelate(@PathVariable("superiorId") int superiorId,@PathVariable("nextId") int nextId){
+        return fmeaFunctionService.deleteRelate(superiorId,nextId);
+    }
 }

@@ -1,9 +1,8 @@
 package com.rb.fmea.service.impl;
 
-import com.rb.fmea.dao.FmeaMapper;
-import com.rb.fmea.dao.ProductMapper;
-import com.rb.fmea.dao.ReviewMapper;
-import com.rb.fmea.dao.ReviewResumeMapper;
+import com.rb.fmea.dao.*;
+import com.rb.fmea.dto.FmeaStructureDto;
+import com.rb.fmea.dto.ReviewResultDto;
 import com.rb.fmea.entities.*;
 import com.rb.fmea.page.PageParameter;
 import com.rb.fmea.result.CodeMsg;
@@ -16,8 +15,10 @@ import com.rb.fmea.util.StringProcess;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @version v1.0
@@ -36,6 +37,8 @@ public class ReviewServiceImpl implements ReviewService {
     private FmeaMapper fmeaMapper;
     @Resource
     private ProductMapper productMapper;
+    @Resource
+    private FmeaStructureMapper fmeaStructureMapper;
 
 
 
@@ -169,13 +172,42 @@ public class ReviewServiceImpl implements ReviewService {
      * @return com.rb.fmea.result.ResultDto
      **/
     @Override
-    public ResultDto selectByPage(PageParameter pageParameter, int productId) {
+    public ResultDto selectByPage(int productId) {
         try {
-            int page=(pageParameter.getPage()-1)*pageParameter.getLimit();
-            List<Review> reviewList=reviewMapper.selectByPage(page,pageParameter.getLimit(),productId);
-            //查询总条数
-            int count=reviewMapper.count(productId);
-            return new ResultDto(0,"",count,reviewList);
+            List<Review> reviews=new ArrayList<>();
+            //查询出对应产品下的所有fmea
+            List<Fmea> fmeaList=fmeaMapper.selectByProduct(productId);
+            for(Fmea fmea :fmeaList) {
+                //查询总成的数据
+                //List<Review> reviewList0 = reviewMapper.selectByState(0);
+                List<Review> reviewList0 = reviewMapper.selectByFmeaIdAndState(fmea.getId(),0);
+                //查询零件的数据
+                //List<Review> reviewList1=reviewMapper.selectByState(1);
+                for (Review review : reviewList0) {
+                    //获取总成id
+                    Integer step = review.getStep();
+                    //总成id查询出他的下层结构
+                    List<FmeaStructureDto> fmeaStructureDtoList = fmeaStructureMapper.selectBySuperiorIdAndFmeaId(step, review.getFmeaId());
+                    List<Integer> list = fmeaStructureDtoList.stream().map(FmeaStructureDto::getId).collect(Collectors.toList());
+                    List<Review> reviewList = reviewMapper.selectByStepAndStateAndFmeaId(list, 1,fmea.getId());
+                    reviews.add(review);
+                    reviews.addAll(reviewList);
+                }
+            }
+
+            List<ReviewResultDto> reviewResultDtoList=new ArrayList<>();
+            //遍历封装
+            for(Review review:reviews){
+                ReviewResultDto reviewResultDto = new ReviewResultDto();
+                Fmea fmea = fmeaMapper.selectByPrimaryKey(review.getFmeaId());
+                reviewResultDto.setFmeaName(fmea==null?"":fmea.getFmeaName());
+                FmeaStructure fmeaStructure = fmeaStructureMapper.selectByPrimaryKey(review.getStep());
+                reviewResultDto.setStructName(fmeaStructure==null?"":fmeaStructure.getStructureName());
+                reviewResultDto.setReviewSate(review.getReviewState());
+                reviewResultDto.setId(review.getId());
+                reviewResultDtoList.add(reviewResultDto);
+            }
+            return new ResultDto(0,"",100,reviewResultDtoList);
         } catch (Exception e) {
             return new ResultDto(1,e.getMessage());
         }

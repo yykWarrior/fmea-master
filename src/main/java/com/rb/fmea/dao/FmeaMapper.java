@@ -69,5 +69,7 @@ public interface FmeaMapper {
 
     int deleteByProductId(int id);
 
-    Integer delete(@Param("id") Integer id);
+    void delete(@Param("id") Integer id);
+
+    List<Fmea> selectByProduct(int productId);
 }

@@ -119,4 +119,10 @@
        in (select id from fmea_structure where superior_id
        in(select id from fmea_structure where fmea_id=#{fmeaId} and superior_id=0)))))
     </select>
+
+    <select id="selectByFailAnalysisId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+        select id, analysis_standard, fmea_fail_analysis_desc, function_id, severity
+        from fmea_fail_analysis
+        where function_id = #{functionId,jdbcType=INTEGER}
+    </select>
 </mapper>

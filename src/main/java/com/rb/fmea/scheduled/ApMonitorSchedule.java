@@ -24,6 +24,7 @@ public class ApMonitorSchedule {
     @Autowired
     private FmeaService fmeaService;
 
+    //每月1号
     @Scheduled(cron = "0 0 0 1 * ?")
     public void setApMonitor(){
         //查询出所有的fmea信息

@@ -91,4 +91,6 @@ public interface FmeaStructureMapper {
     FmeaStructure selectByMeasureId(int measureId);
 
     FmeaStructure selectSecondTree(int fmeaId);
+
+    List<FmeaStructure> selectAllFmeaIdIsNull();
 }

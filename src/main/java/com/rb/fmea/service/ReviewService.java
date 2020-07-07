@@ -21,7 +21,7 @@ public interface ReviewService {
 
     Result updateById(int id, String reviewResult);
 
-    ResultDto selectByPage(PageParameter pageParameter, int productId);
+    ResultDto selectByPage(int productId);
 
     void create(int fmeaId, int structId, int state);
 

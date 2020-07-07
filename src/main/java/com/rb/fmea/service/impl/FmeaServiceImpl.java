@@ -214,4 +214,22 @@ public class FmeaServiceImpl implements FmeaService {
         return result;
     }
 
+    /**
+     * @Author yyk
+     * @Description //TODO fmea间复制，同级复制和上下级复制，0表示同级复制，1表示上下级复制
+     * @Date 2020/7/7 10:27
+     * @Param [fmeaId, type]
+     * @return com.rb.fmea.result.Result
+     **/
+    @Override
+    public Result fmeaCopy(int fmeaId, int type) {
+       /* if(type==0){
+
+        }else if(type==1){
+
+        }*/
+        return Result.success();
+    }
+
+
 }

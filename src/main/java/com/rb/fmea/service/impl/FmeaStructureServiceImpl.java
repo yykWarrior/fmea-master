@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -93,13 +94,17 @@ public class FmeaStructureServiceImpl implements FmeaStructureService {
     public Result selectByFmeaId(int fmeaId) {
         try {
             List<FmeaStructureDto> fmeaStructureDtoList= fmeaStructureMapper.selectBySuperiorIdAndFmeaId(0,fmeaId);
+            fmeaStructureDtoList = setState(fmeaStructureDtoList, 0);
             for(FmeaStructureDto fmeaStructureDto:fmeaStructureDtoList){
                 List<FmeaStructureDto> fmeaStructureDtoList1 = fmeaStructureMapper.selectBySuperiorIdAndFmeaId(fmeaStructureDto.getId(), fmeaId);
+                fmeaStructureDtoList1=setState(fmeaStructureDtoList1, 1);
                 for(FmeaStructureDto fmeaStructureDto1:fmeaStructureDtoList1){
                     List<FmeaStructureDto> fmeaStructureDtoList2 = fmeaStructureMapper.selectBySuperiorIdAndFmeaId(fmeaStructureDto1.getId(), fmeaId);
+                    fmeaStructureDtoList2=setState(fmeaStructureDtoList2, 2);
                     for(FmeaStructureDto fmeaStructureDto2:fmeaStructureDtoList2){
                         List<FmeaStructureDto> fmeaStructureDtoList3 = fmeaStructureMapper.selectBySuperiorIdAndFmeaId(fmeaStructureDto2.getId(), fmeaId);
-                       fmeaStructureDto2.setFmeaStructureDtoList(fmeaStructureDtoList3);
+                        fmeaStructureDtoList3=setState(fmeaStructureDtoList3, 3);
+                        fmeaStructureDto2.setFmeaStructureDtoList(fmeaStructureDtoList3);
                     }
                     fmeaStructureDto1.setFmeaStructureDtoList(fmeaStructureDtoList2);
                 }
@@ -111,6 +116,15 @@ public class FmeaStructureServiceImpl implements FmeaStructureService {
         }
     }
 
+
+    public List<FmeaStructureDto> setState( List<FmeaStructureDto> fmeaStructureDtoList,int state){
+        List<FmeaStructureDto> fmeaStructureDtoList1=new ArrayList<>();
+        for(FmeaStructureDto fmeaStructureDto:fmeaStructureDtoList){
+            fmeaStructureDto.setState(state);
+            fmeaStructureDtoList1.add(fmeaStructureDto);
+        }
+        return fmeaStructureDtoList1;
+    }
 
     /**
      * @Author yyk

@@ -70,4 +70,6 @@ public interface FmeaService {
     Result updateState(int fmeaId);
 
     Boolean selectByIdReturnState(int fmeaId);
+
+    Result fmeaCopy(int fmeaId, int type);
 }

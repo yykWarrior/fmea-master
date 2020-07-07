@@ -2,6 +2,7 @@ package com.rb.fmea.dao;
 
 import com.rb.fmea.entities.Review;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 @Mapper
@@ -53,4 +54,10 @@ public interface ReviewMapper {
     Review selectByFmeaIdAndStep(int fmeaId, int structId);
 
     List<Review> selectByReviewState(int reviewSate);
+
+    List<Review> selectByState(int state);
+
+    List<Review> selectByStepAndStateAndFmeaId(@Param("list") List<Integer> list,@Param("state") int state,@Param("fmeaId") int fmeaId);
+
+    List<Review> selectByFmeaIdAndState(@Param("id") Integer id,@Param("state") int state);
 }

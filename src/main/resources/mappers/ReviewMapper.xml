@@ -91,11 +91,36 @@
         from review where fmea_id=#{fmeaId} and step=#{structId}
     </select>
 
-    <!--根据评审状态查询-->
+    <!--根据状态查询-->
     <select id="selectByReviewState" resultMap="BaseResultMap">
         select id, review_require, special_require, finsh_date, fmea_id, responsible, step,
         review_result, review_date, create_date, `state`, review_state
-        from review where review_state=#{reviewSate}
+        from review where state=#{state}
+    </select>
+
+    <!--根据状态和fmeaId查询-->
+    <select id="selectByFmeaIdAndState" resultMap="BaseResultMap">
+        select id, review_require, special_require, finsh_date, fmea_id, responsible, step,
+        review_result, review_date, create_date, `state`, review_state
+        from review where state=#{state} and fmea_id=#{id}
+    </select>
+
+
+    <!--根据状态和step查询-->
+    <select id="selectByStepAndStateAndFmeaId" resultMap="BaseResultMap">
+        select id, review_require, special_require, finsh_date, fmea_id, responsible, step,
+        review_result, review_date, create_date, `state`, review_state
+        from review
+        <where>
+            <if test="list!=null and list.size>0">
+                and step in
+                <foreach item="id" collection="list" separator="," open="(" close=")" index="">
+                    #{id}
+                </foreach>
+            </if>
+            and state=#{state} and fmea_id=#{fmeaId}
+        </where>
+
     </select>
 
 </mapper>

@@ -18,8 +18,7 @@ import javax.annotation.Resource;
 public class FmeaMeasureSchedule {
     @Resource
     private MeasuresMonitorService measuresMonitorService;
-
-    @Scheduled(cron = "0 0 0 1 * ?")
+    //每月1号    @Scheduled(cron = "0 0 0 1 * ?")
     public void setMeasure(){
         measuresMonitorService.insert();
     }

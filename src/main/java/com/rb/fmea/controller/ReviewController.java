@@ -58,7 +58,7 @@ public class ReviewController {
      * @return com.rb.fmea.result.Result
      **/
     @RequestMapping(value = "review/update",method = RequestMethod.POST)
-    @ApiOperation(value = "修改评审",notes = "修改评审")
+    @ApiOperation(value = "修改评审,新建对应的评审",notes = "修改评审,新建对应的评审")
     public Result update(Review review){
         return reviewService.update(review);
     }
@@ -85,10 +85,10 @@ public class ReviewController {
      * @Param [pageParameter]
      * @return com.rb.fmea.result.ResultDto
      **/
-    @RequestMapping(value = "reviewResult/selectByPage")
+    @RequestMapping(value = "reviewResult/selectByPage",method = RequestMethod.POST)
     @ApiOperation(value = "分页查询评审结果",notes = "分页查询评审结果")
-    public ResultDto selectByPage(PageParameter pageParameter, int productId){
-        return reviewService.selectByPage(pageParameter,productId);
+    public ResultDto selectByPage( int productId){
+        return reviewService.selectByPage(productId);
     }
 
 }

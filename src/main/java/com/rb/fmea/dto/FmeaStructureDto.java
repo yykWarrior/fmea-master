@@ -29,6 +29,8 @@ public class FmeaStructureDto {
 
     private Integer fmeaId;
 
+    private int state;
+
     private List<FmeaStructureDto> fmeaStructureDtoList;
 
     private List<StructureFunctionDto> fmeaFunctionDtoList;

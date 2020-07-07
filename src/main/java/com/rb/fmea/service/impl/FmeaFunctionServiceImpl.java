@@ -207,11 +207,15 @@ public class FmeaFunctionServiceImpl implements FmeaFunctionService {
                 FmeaStructure fmeaStructure1 = fmeaStructureMapper.selectByPrimaryKey(fmeaFunction1.getFmeaStructureId());
                 //判断是否在同一个fmea下,不是同一个fmea建立不了关系
                 if (fmeaStructure.getFmeaId() == fmeaStructure1.getFmeaId()) {
-                    FmeaFunctionRelate fmeaFunctionRelate = new FmeaFunctionRelate();
-                    fmeaFunctionRelate.setFmea_id(fmeaStructure.getFmeaId());
-                    fmeaFunctionRelate.setFunctionNextId(Integer.parseInt(functionId1));
-                    fmeaFunctionRelate.setFunctionSuperiorId(functionId0);
-                    fmeaFunctionRelateMapper.insert(fmeaFunctionRelate);
+                    //查询是否已经建过关系
+                    FmeaFunctionRelate fmeaFunctionRelate0=fmeaFunctionRelateMapper.selectBySuperiorIdAndNextId(functionId0,Integer.parseInt(functionId1));
+                    if(fmeaFunctionRelate0==null) {
+                        FmeaFunctionRelate fmeaFunctionRelate = new FmeaFunctionRelate();
+                        fmeaFunctionRelate.setFmea_id(fmeaStructure.getFmeaId());
+                        fmeaFunctionRelate.setFunctionNextId(Integer.parseInt(functionId1));
+                        fmeaFunctionRelate.setFunctionSuperiorId(functionId0);
+                        fmeaFunctionRelateMapper.insert(fmeaFunctionRelate);
+                    }
                 }
             }
         }
@@ -335,6 +339,29 @@ public class FmeaFunctionServiceImpl implements FmeaFunctionService {
             return Result.success(fmeaStructureDtoList);
         } catch (Exception e) {
             return Result.error(new CodeMsg(ReturnCode.DATA_IS_WRONG,e.getMessage()));
+        }
+    }
+
+
+
+    /**
+     * @Author yyk
+     * @Description //TODO 删除功能关系,根据上下级id
+     * @Date 2020/7/7 17:40
+     * @Param [superiorId, nextId]
+     * @return com.rb.fmea.result.Result
+     **/
+    @Override
+    public Result deleteRelate(int superiorId,int nextId) {
+        try {
+            //String[] idArray = StringProcess.spliteString(ids, ",");
+           /* for(int i=0;i<idArray.length;i++){
+                fmeaFunctionMapper.deleteRelate(Integer.parseInt(idArray[i]));
+            }*/
+            fmeaFunctionMapper.deleteRelate(superiorId,nextId);
+            return Result.success();
+        } catch (NumberFormatException e) {
+            return Result.error(new CodeMsg(ReturnCode.DELETE_IS_ERROR,e.getMessage()));
         }
     }
 

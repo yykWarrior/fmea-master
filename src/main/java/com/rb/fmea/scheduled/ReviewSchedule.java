@@ -19,13 +19,13 @@ public class ReviewSchedule {
     private ReviewResultSumService reviewResultSumService;
     @Autowired
     private ReviewService reviewService;
-
+    //每月1号
     @Scheduled(cron = "0 0 0 1 * ?")
     public void setReview(){
         reviewResultSumService.insert();
     }
 
-
+    //每天1点
     @Scheduled(cron = "0 0 1 * * ?")
     public void setNotCreateTimeOut(){
         reviewService.updateState();

@@ -66,4 +66,6 @@ public interface FmeaFunctionRelateMapper {
      * @return java.util.List<com.rb.fmea.dto.FmeaStructureDto>
      **/
     List<StructureFunctionDto> selectNextByStructureId(int structureId);
+
+    FmeaFunctionRelate selectBySuperiorIdAndNextId(int superiorId, int nextId);
 }

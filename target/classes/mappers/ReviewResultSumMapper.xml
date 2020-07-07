@@ -67,6 +67,7 @@
     <!--根据产品id查询-->
     <select id="selectByProductId" resultMap="BaseResultMap" >
         select id, review_level, `month`, fmea_id, total_num
-        from review_result_sum where fmea_id=#{productId}    order by month,review_level asc
+        from review_result_sum where fmea_id=#{productId}
+        order by month,review_level asc
     </select>
 </mapper>

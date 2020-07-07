@@ -103,4 +103,6 @@ public interface FmeaFailAnalysisMapper {
      * @return java.util.List<com.rb.fmea.entities.FmeaFailAnalysis>
      **/
     List<FmeaFailAnalysis> selectFailAnalysisByFmeaId(int fmeaId);
+
+    List<FmeaFailAnalysis> selectByFailAnalysisId(Integer functionId);
 }

@@ -6,6 +6,7 @@ import com.rb.fmea.result.Result;
 import com.rb.fmea.service.FmeaService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -104,5 +105,19 @@ public class FmeaController {
     @RequestMapping(value = "/fmea/updateState/{fmeaId}",method = RequestMethod.GET)
     public Result updateState(@PathVariable("fmeaId") int fmeaId){
         return fmeaService.updateState(fmeaId);
+    }
+
+
+    /**
+     * @Author yyk
+     * @Description //TODO fmea间复制，同级复制和上下级复制，0表示同级复制，1表示上下级复制
+     * @Date 2020/7/7 8:43
+     * @Param [fmeaId, type]
+     * @return com.rb.fmea.result.Result
+     **/
+    @ApiOperation(value ="fmea间复制(type为0是同级复制,type为1是上下级复制)",notes = "fmea间复制(type为0是同级复制,type为1是上下级复制)")
+    @RequestMapping(value = "/fmea/copy/{fmeaId}",method = RequestMethod.GET)
+    public Result fmeaCopy(@Param("fmeaId") int fmeaId,  int type){
+        return fmeaService.fmeaCopy(fmeaId,type);
     }
 }

@@ -83,6 +83,7 @@
     </select>
 
 
+
     <!--根据上一级id和fmeaId查询-->
     <select id="selectBySuperiorIdAndFmeaId" resultMap="BaseResultMap1" >
         select id, structure_name, structure_desc, superior_id, fmea_id
@@ -134,4 +135,10 @@
         from fmea_structure where superior_id=(select id from fmea_structure where superior_id=0 and fmea_id=#{fmeaId})
     </select>
 
+
+    <!--关联查询出fmea不存在的结构-->
+    <select id="selectAllFmeaIdIsNull" resultMap="BaseResultMap">
+        select fs.id, structure_name, structure_desc, fs.superior_id, fmea_id
+        from fmea_structure fs left  join fmea f on fs.fmea_id=f.id where f.id is null
+    </select>
 </mapper>
